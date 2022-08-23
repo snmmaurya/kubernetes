@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snm-app
+  namespace: snm-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: snm-app
+  template:
+    metadata:
+      labels:
+        app: snm-app
+    spec:
+      containers:
+      - name: snm-app
+        image: nginx
+        ports:
+        - containerPort: 80

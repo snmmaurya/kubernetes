@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: snm-app
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: snm-app-svc
+  namespace: snm-app
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: snm-app
+  type: ClusterIP
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: snm-app-ingress
+  namespace: snm-app
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: www.itssnmspace.com
+    http:
+      paths:
+        - pathType: Prefix
+          backend:
+            service:
+              name: snm-app-svc
+              port:
+                number: 80
+          path: /
+  - host: itssnmspace.com
+    http:
+      paths:
+        - pathType: Prefix
+          backend:
+            service:
+              name: snm-app-svc
+              port:
+                number: 80
+          path: /
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snm-app
+  namespace: snm-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: snm-app
+  template:
+    metadata:
+      labels:
+        app: snm-app
+    spec:
+      containers:
+      - name: snm-app
+        image: nginx
+        ports:
+        - containerPort: 80

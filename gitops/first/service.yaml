@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: snm-app-svc
+  namespace: snm-app
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: snm-app
+  type: LoadBalancer
